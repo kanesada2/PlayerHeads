@@ -18,7 +18,6 @@ import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,7 +55,7 @@ public class PlayerHeadsListener implements Listener {
         double lootingrate = 1;
 
         if (killer != null) {
-            ItemStack weapon = killer.getItemInHand();
+            ItemStack weapon = killer.getInventory().getItemInMainHand();
             if (weapon != null) {
                 lootingrate = 1 + (plugin.configFile.getDouble("lootingrate") * weapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
             }
@@ -130,16 +129,14 @@ public class PlayerHeadsListener implements Listener {
         } else if (entityType == EntityType.ZOMBIE) {
             EntityDeathHelper(event, SkullType.ZOMBIE, plugin.configFile.getDouble("zombiedroprate") * lootingrate);
         } else if (entityType == EntityType.SKELETON) {
-            if (((Skeleton) event.getEntity()).getSkeletonType() == Skeleton.SkeletonType.NORMAL) {
                 EntityDeathHelper(event, SkullType.SKELETON, plugin.configFile.getDouble("skeletondroprate") * lootingrate);
-            } else if (((Skeleton) event.getEntity()).getSkeletonType() == Skeleton.SkeletonType.WITHER) {
+        } else if (entityType == EntityType.WITHER_SKELETON) {
                 for (Iterator<ItemStack> it = event.getDrops().iterator(); it.hasNext();) {
                     if (it.next().getType() == Material.SKULL_ITEM) {
                         it.remove();
                     }
                 }
                 EntityDeathHelper(event, SkullType.WITHER, plugin.configFile.getDouble("witherdroprate") * lootingrate);
-            }
         } else if (entityType == EntityType.SLIME) {
             if (((Slime) event.getEntity()).getSize() == 1) {
                 EntityDeathHelper(event, CustomSkullType.SLIME, plugin.configFile.getDouble("slimedroprate") * lootingrate);
@@ -199,13 +196,13 @@ public class PlayerHeadsListener implements Listener {
                 switch (skullState.getSkullType()) {
                 case PLAYER:
                     if (skullState.hasOwner()) {
-                        String owner = skullState.getOwner();
+                        String owner = skullState.getOwningPlayer().getName();
                         //String ownerStrip = ChatColor.stripColor(owner); //Unnecessary?
                         CustomSkullType skullType = CustomSkullType.get(owner);
                         if (skullType != null) {
                             Tools.formatMsg(player, Lang.CLICKINFO2, skullType.getDisplayName());
                             if (!owner.equals(skullType.getOwner())) {
-                                skullState.setOwner(skullType.getOwner());
+                            	skullState.setOwner(skullType.getOwner());
                                 skullState.update();
                             }
                         } else {
@@ -229,7 +226,7 @@ public class PlayerHeadsListener implements Listener {
                     break;
                 }
             } else if ((skullState.getSkullType() == SkullType.PLAYER) && (skullState.hasOwner())) {
-                String owner = skullState.getOwner();
+                String owner = skullState.getOwningPlayer().getName();
                 CustomSkullType skullType = CustomSkullType.get(owner);
                 if ((skullType != null) && (!owner.equals(skullType.getOwner()))) {
                     skullState.setOwner(skullType.getOwner());
@@ -250,7 +247,7 @@ public class PlayerHeadsListener implements Listener {
             Skull skull = (Skull) block.getState();
             if (skull.hasOwner()) {
                 //String owner = ChatColor.stripColor(skull.getOwner()); //Unnecessary?
-                CustomSkullType skullType = CustomSkullType.get(skull.getOwner());
+                CustomSkullType skullType = CustomSkullType.get(skull.getOwningPlayer().getName());
                 if (skullType != null) {
                     boolean isNotExempt = false;
                     if (plugin.NCPHook) {
@@ -260,7 +257,7 @@ public class PlayerHeadsListener implements Listener {
                     }
 
                     plugin.getServer().getPluginManager().callEvent(new PlayerAnimationEvent(player));
-                    plugin.getServer().getPluginManager().callEvent(new BlockDamageEvent(player, block, player.getItemInHand(), true));
+                    plugin.getServer().getPluginManager().callEvent(new BlockDamageEvent(player, block, player.getInventory().getItemInMainHand(), true));
 
                     FakeBlockBreakEvent fakebreak = new FakeBlockBreakEvent(block, player);
                     plugin.getServer().getPluginManager().callEvent(fakebreak);

@@ -6,27 +6,27 @@
   <packaging>jar</packaging>
   <version>3.10-SNAPSHOT</version>
   <name>PlayerHeads</name>
-  
+
   <organization>
     <name>ShiniNet</name>
     <url>http://www.shininet.org</url>
   </organization>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
   <scm>
     <developerConnection>scm:git:git@github.com:meiskam/PlayerHeads.git</developerConnection>
     <connection>scm:git:git://github.com/meiskam/PlayerHeads.git</connection>
     <url>https://github.com/meiskam/PlayerHeads/tree/master/</url>
   </scm>
-  
+
   <issueManagement>
     <system>GitHub</system>
     <url>https://github.com/meiskam/PlayerHeads/issues</url>
   </issueManagement>
-  
+
   <repositories>
     <repository>
       <id>spigot-repo</id>
@@ -37,25 +37,20 @@
       <url>http://repo.md-5.net/content/repositories/releases/</url>
     </repository>
   </repositories>
-  
+
   <dependencies>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot-api</artifactId>
-      <version>1.8-R0.1-SNAPSHOT</version>
-    </dependency>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.8-R0.1-SNAPSHOT</version>
+      <version>1.11.2-R0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>fr.neatmonster</groupId>
-      <artifactId>ncpplugin</artifactId>
-      <version>static</version>
-    </dependency>
+	  <groupId>fr.neatmonster</groupId>
+      <artifactId>nocheatplus</artifactId>
+      <version>LATEST</version>
+	</dependency>
   </dependencies>
-  
+
   <build>
     <finalName>${project.name}-${project.version}${describe}</finalName>
     <resources>

@@ -196,7 +196,7 @@ public class PlayerHeadsCommandExecutor implements CommandExecutor, TabCompleter
                 Tools.formatMsg(sender, Lang.BRACKET_LEFT + label + Lang.COLON + Lang.CMD_RENAME + Lang.BRACKET_RIGHT + Lang.SPACE + Lang.SYNTAX + Lang.COLON_SPACE + label + Lang.SPACE + Lang.CMD_RENAME + Lang.SPACE + Lang.OPT_HEADNAME_OPTIONAL);
                 return true;
             }
-            ItemStack skullInput = ((Player) sender).getItemInHand();
+            ItemStack skullInput = ((Player) sender).getInventory().getItemInMainHand();
             if (skullInput.getType() != Material.SKULL_ITEM) {
                 Tools.formatMsg(sender, Lang.BRACKET_LEFT + label + Lang.COLON + Lang.CMD_RENAME + Lang.BRACKET_RIGHT + Lang.SPACE + Lang.ERROR_NOT_A_HEAD);
                 return true;
@@ -212,7 +212,7 @@ public class PlayerHeadsCommandExecutor implements CommandExecutor, TabCompleter
                 skullOutput = Tools.Skull("");
             }
             skullOutput.setAmount(skullInput.getAmount());
-            ((Player) sender).setItemInHand(skullOutput);
+            ((Player) sender).getInventory().setItemInMainHand(skullOutput);
             Tools.formatMsg(sender, Lang.BRACKET_LEFT + label + Lang.COLON + Lang.CMD_RENAME + Lang.BRACKET_RIGHT + Lang.SPACE + Lang.RENAMED_HEAD);
             return true;
         } else {
